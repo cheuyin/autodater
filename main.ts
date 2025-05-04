@@ -10,7 +10,7 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 	mySetting: 'default'
 }
 
-export default class MyPlugin extends Plugin {
+export default class AutoDater extends Plugin {
 	settings: MyPluginSettings;
 
 	async onload() {
