@@ -108,9 +108,9 @@ class SampleModal extends Modal {
 }
 
 class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+	plugin: AutoDater;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: AutoDater) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
