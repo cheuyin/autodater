@@ -7,8 +7,9 @@ export default class AutoDater extends Plugin {
 				this.app.vault.on("create", async (file) => {
 					if (file == null || file instanceof TFolder) return;
 					const tfile = file as TFile;
-					const createdField = `Created: ${this.getCurrentLocalDate()}`;
-					this.app.vault.modify(tfile, `---\n${createdField}\n---`);
+					const currLocalDate = this.getCurrentLocalDate();
+					const initialFields = `Created: ${currLocalDate}\nUpdated: ${currLocalDate}`;
+					this.app.vault.modify(tfile, `---\n${initialFields}\n---`);
 				})
 			)
 		);
@@ -17,7 +18,7 @@ export default class AutoDater extends Plugin {
 	getCurrentLocalDate(): string {
 		let currentDate = new Date();
 		const offset = currentDate.getTimezoneOffset();
-		currentDate = new Date(currentDate.getTime() - (offset * 60 * 1000));
+		currentDate = new Date(currentDate.getTime() - offset * 60 * 1000);
 		return currentDate.toISOString().split("T")[0];
 	}
 }
