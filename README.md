@@ -1,94 +1,52 @@
-# Obsidian Sample Plugin
+# AutoDater for Obsidian
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+Automatically adds and maintains `Created` and `Updated` dates in the YAML frontmatter of your Obsidian notes.
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+## Why this plugin? 🤔
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+Have you ever lost valuable metadata like creation or modification dates when exporting notes, migrating between tools, or recovering from a backup? Standard file system metadata can be fragile.
 
-## First time developing plugins?
+This plugin solves that by embedding `Created` and `Updated` timestamps directly into the content of your notes within the YAML frontmatter. This ensures this important contextual information stays **with the note itself**, wherever it goes.
 
-Quick starting guide for new plugin devs:
+## How it Works / Features ✨
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+* **Automatic `Created` Date:** When you create a **new note**, the plugin automatically adds:
+    ```yaml
+    ---
+    Created: YYYY-MM-DD
+    Updated: YYYY-MM-DD
+    ---
+    ```
+    (Where `YYYY-MM-DD` is the current date). It **will not** modify existing files that lack these fields upon initial activation.
+* **Automatic `Updated` Date:** Whenever you **modify an existing note**, the plugin:
+    * Updates the `Updated:` field to the current date (`YYYY-MM-DD`).
+    * If the `Updated:` field doesn't exist, it adds it.
+    * If no YAML frontmatter exists at all, it creates the frontmatter block and adds the `Updated:` field.
+* **Safe Updates:** The plugin carefully adds or updates fields without overwriting other existing YAML data. It's designed to be non-destructive.
+* **Lightweight:** Designed to update efficiently without noticeable slowdowns during normal note-taking.
 
-## Releasing new releases
+## Installation ⚙️
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+**Recommended Method (Once Published):**
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+1.  Search for "[Plugin Name]" in Obsidian's Community Plugins browser.
+2.  Install it.
+3.  Enable the plugin in your Obsidian settings under "Community Plugins".
 
-## Adding your plugin to the community plugin list
+**Manual Installation (For now or for testing):**
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+1.  Download the `main.js`, `styles.css` (if any), and `manifest.json` files from the latest release.
+2.  Navigate to your Obsidian vault's configuration folder: `<YourVault>/.obsidian/plugins/`.
+3.  Create a new folder named `[your-plugin-id]` (this should match the `id` in your `manifest.json`).
+4.  Place the downloaded files into this new folder.
+5.  Go to Obsidian settings > Community Plugins.
+6.  Refresh the list and enable "[Plugin Name]".
 
-## How to use
+## Changelog 📜
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+**Version 1.0.0 (Initial Release)**
 
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
-```
-
-If you have multiple URLs, you can also do:
-
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
-
-## API Documentation
-
-See https://github.com/obsidianmd/obsidian-api
+* Plugin Created!
+* Adds `Created` and `Updated` fields (YYYY-MM-DD) to new notes.
+* Updates/adds `Updated` field on note modification.
+* Uses `obsidian` package's `processFrontMatter` for safe YAML handling.
