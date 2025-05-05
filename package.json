@@ -1,15 +1,15 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "autodater",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "Automatically adds Created/Updated dates to YAML frontmatter.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": ["obsidian-plugin", "obsidian", "yaml", "frontmatter", "created", "updated"],
+	"author": "Stanley Cheung",
 	"license": "MIT",
 	"devDependencies": {
 		"@types/node": "^16.11.6",
