@@ -1,43 +1,43 @@
 import { Plugin, TFile } from "obsidian";
 export default class AutoDater extends Plugin {
-	async onload() {
+	onload() {
 		// Without the onLayoutReady callback, this event is triggered for every existing file when the vault first loads, which is undesired
 		this.app.workspace.onLayoutReady(() =>
 			this.registerEvent(
-				this.app.vault.on("create", (file) => {
+				this.app.vault.on("create", async (file) => {
 					if (file instanceof TFile) {
 						try {
-							this.app.fileManager.processFrontMatter(
+							await this.app.fileManager.processFrontMatter(
 								file,
-								(frontmatter) => {
+								(frontmatter: Record<string, unknown>) => {
 									frontmatter["Created"] =
 										this.getCurrentLocalDate();
-								}
+								},
 							);
 						} catch (error) {
 							console.log(error);
 						}
 					}
-				})
-			)
+				}),
+			),
 		);
 
 		this.registerEvent(
-			this.app.vault.on("modify", (file) => {
+			this.app.vault.on("modify", async (file) => {
 				if (file instanceof TFile) {
 					try {
-						this.app.fileManager.processFrontMatter(
+						await this.app.fileManager.processFrontMatter(
 							file,
-							(frontmatter) => {
+							(frontmatter: Record<string, unknown>) => {
 								frontmatter["Updated"] =
 									this.getCurrentLocalDate();
-							}
+							},
 						);
 					} catch (error) {
 						console.log(error);
 					}
 				}
-			})
+			}),
 		);
 	}
 
