@@ -22,14 +22,14 @@ This plugin solves that by embedding `Created` and `Updated` timestamps directly
     * Updates the `Updated:` field to the current date (`YYYY-MM-DD`).
     * If the `Updated:` field doesn't exist, it adds it.
     * If no YAML frontmatter exists at all, it creates the frontmatter block and adds the `Updated:` field.
-* **Safe Updates:** The plugin carefully adds or updates fields without overwriting other existing YAML data. It's designed to be non-destructive.
-* **Lightweight:** Designed to update efficiently without noticeable slowdowns during normal note-taking.
+* **Safe Updates:** The plugin uses Obsidian's `processFrontMatter` API to carefully add or update fields without overwriting other existing YAML data. It also includes built-in protection to prevent infinite update loops.
+* **Lightweight & Robust:** Designed to update efficiently. It uses a debounced update mechanism (2-second delay) to ensure it only writes to your file once you've finished typing, preventing unnecessary disk I/O and performance lag.
 
 ## Installation ⚙️
 
 **Recommended Method (Once Published):**
 
-1.  Search for "[Plugin Name]" in Obsidian's Community Plugins browser.
+1.  Search for "AutoDater" in Obsidian's Community Plugins browser.
 2.  Install it.
 3.  Enable the plugin in your Obsidian settings under "Community Plugins".
 
@@ -37,12 +37,28 @@ This plugin solves that by embedding `Created` and `Updated` timestamps directly
 
 1.  Download the `main.js`, `styles.css` (if any), and `manifest.json` files from the latest release.
 2.  Navigate to your Obsidian vault's configuration folder: `<YourVault>/.obsidian/plugins/`.
-3.  Create a new folder named `[your-plugin-id]` (this should match the `id` in your `manifest.json`).
+3.  Create a new folder named `autodater` (this should match the `id` in your `manifest.json`).
 4.  Place the downloaded files into this new folder.
 5.  Go to Obsidian settings > Community Plugins.
-6.  Refresh the list and enable "[Plugin Name]".
+6.  Refresh the list and enable "AutoDater".
+
+## Local Development 🛠️
+
+If you want to build the plugin yourself or contribute:
+
+1.  Clone this repository.
+2.  Install dependencies: `npm install`.
+3.  Build the plugin:
+    *   `npm run dev`: Starts a watch mode that rebuilds the plugin on changes.
+    *   `npm run build`: Creates a production build in the root directory.
 
 ## Changelog 📜
+
+**Version 1.1.0**
+
+* **Robust File Handling:** Implemented debouncing (2s) and loop protection to ensure safe and efficient file updates.
+* **Tooling Upgrade:** Migrated to ESLint Flat Config, upgraded TypeScript to 6.0, and updated dependencies to the latest versions.
+* **Type Safety:** Improved internal type definitions for safer frontmatter manipulation.
 
 **Version 1.0.0 (Initial Release)**
 
