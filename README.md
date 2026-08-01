@@ -27,13 +27,13 @@ This plugin solves that by embedding `Created` and `Updated` timestamps directly
 
 ## Installation ⚙️
 
-**Recommended Method (Once Published):**
+**From Obsidian (recommended):**
 
-1.  Search for "AutoDater" in Obsidian's Community Plugins browser.
-2.  Install it.
-3.  Enable the plugin in your Obsidian settings under "Community Plugins".
+1.  Open **Settings → Community Plugins** and turn off **Restricted mode** if needed.
+2.  Click **Browse**, search for **AutoDater**, and install it.
+3.  Enable the plugin under **Community Plugins**.
 
-**Manual Installation (For now or for testing):**
+**Manual installation (for testing):**
 
 1.  Download the `main.js`, `styles.css` (if any), and `manifest.json` files from the latest release.
 2.  Navigate to your Obsidian vault's configuration folder: `<YourVault>/.obsidian/plugins/`.
