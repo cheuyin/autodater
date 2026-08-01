@@ -23,7 +23,7 @@ This plugin solves that by embedding `Created` and `Updated` timestamps directly
     * If the `Updated:` field doesn't exist, it adds it.
     * If no YAML frontmatter exists at all, it creates the frontmatter block and adds the `Updated:` field.
 * **Safe Updates:** The plugin uses Obsidian's `processFrontMatter` API to carefully add or update fields without overwriting other existing YAML data. It also includes built-in protection to prevent infinite update loops.
-* **Lightweight & Robust:** Designed to update efficiently. It uses a debounced update mechanism (2-second delay) to ensure it only writes to your file once you've finished typing, preventing unnecessary disk I/O and performance lag.
+* **Lightweight & Robust:** Designed to update efficiently. It uses a debounced update mechanism (6-second delay) to ensure it only writes to your file once you've finished typing, preventing unnecessary disk I/O and performance lag.
 
 ## Installation ⚙️
 
