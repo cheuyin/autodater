@@ -35,6 +35,8 @@ AutoDater uses `Created`, `Updated`, and `YYYY-MM-DD` by default. You can custom
 
 Changing a property name affects future writes only. Existing frontmatter properties are not renamed automatically.
 
+Property names are matched case-insensitively when updating existing fields. For example, `Updated` and `updated` are treated as the same property, while a different name such as `modified` creates a separate property.
+
 ## Important behavior
 
 - Existing notes are not backfilled when you enable AutoDater.

@@ -53,7 +53,7 @@ export default class AutoDater extends Plugin {
 		if (!(file instanceof TFile)) return;
 		if (file.extension !== "md") return;
 
-		const property =
+		const configuredProperty =
 			eventType === "created"
 				? this.settings.createdProperty
 				: this.settings.updatedProperty;
@@ -63,24 +63,50 @@ export default class AutoDater extends Plugin {
 			await this.app.fileManager.processFrontMatter(
 				file,
 				(frontmatter: Record<string, unknown>) => {
+					const propertyName = findExistingPropertyName(
+						frontmatter,
+						configuredProperty,
+					);
+
 					// Preserve an existing creation date.
 					if (
 						eventType === "created" &&
-						frontmatter[property] !== undefined
+						frontmatter[propertyName] !== undefined
 					)
 						return;
 
 					// Avoid unnecessary writes when the configured value is current.
-					if (frontmatter[property] === dateValue) return;
+					if (frontmatter[propertyName] === dateValue) return;
 
-					frontmatter[property] = dateValue;
+					frontmatter[propertyName] = dateValue;
 				},
 			);
 		} catch (error) {
 			console.error(
-				`AutoDater: Error updating ${property} for ${file.path}`,
+				`AutoDater: Error updating ${configuredProperty} for ${file.path}`,
 				error,
 			);
 		}
 	}
+}
+
+function findExistingPropertyName(
+	frontmatter: Record<string, unknown>,
+	configuredProperty: string,
+): string {
+	if (
+		Object.prototype.hasOwnProperty.call(
+			frontmatter,
+			configuredProperty,
+		)
+	)
+		return configuredProperty;
+
+	const normalizedProperty = configuredProperty.toLowerCase();
+	return (
+		Object.keys(frontmatter).find(
+			frontmatterProperty =>
+				frontmatterProperty.toLowerCase() === normalizedProperty,
+		) ?? configuredProperty
+	);
 }
