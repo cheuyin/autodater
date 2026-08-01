@@ -1,74 +1,51 @@
 # AutoDater for Obsidian
 
-Automatically adds and maintains `Created` and `Updated` dates in the YAML frontmatter of your Obsidian notes.
+Automatically add `Created` and `Updated` dates to new and edited Markdown notes. Zero setup, no manual date tracking.
 
-## Why this plugin? 🤔
+![Obsidian Properties showing automatic Created and Updated dates](./assets/properties-preview.png)
 
-Have you ever lost valuable metadata like creation or modification dates when exporting notes, migrating between tools, or recovering from a backup? Standard file system metadata can be fragile.
+## What it does
 
-This plugin solves that by embedding `Created` and `Updated` timestamps directly into the content of your notes within the YAML frontmatter. This ensures this important contextual information stays **with the note itself**, wherever it goes.
+After you create and edit a note, its YAML frontmatter looks like this:
 
-## How it Works / Features ✨
+```yaml
+---
+Created: 2026-08-01
+Updated: 2026-08-01
+---
+```
 
-* **Automatic `Created` Date:** When you create a **new note**, the plugin automatically adds:
-    ```yaml
-    ---
-    Created: YYYY-MM-DD
-    Updated: YYYY-MM-DD
-    ---
-    ```
-    (Where `YYYY-MM-DD` is the current date). It **will not** modify existing files that lack these fields upon initial activation.
-* **Automatic `Updated` Date:** Whenever you **modify an existing note**, the plugin:
-    * Updates the `Updated:` field to the current date (`YYYY-MM-DD`).
-    * If the `Updated:` field doesn't exist, it adds it.
-    * If no YAML frontmatter exists at all, it creates the frontmatter block and adds the `Updated:` field.
-* **Safe Updates:** The plugin uses Obsidian's `processFrontMatter` API to carefully add or update fields without overwriting other existing YAML data. It also includes built-in protection to prevent infinite update loops.
-* **Lightweight & Robust:** Designed to update efficiently. It uses a debounced update mechanism (6-second delay) to ensure it only writes to your file once you've finished typing, preventing unnecessary disk I/O and performance lag.
+When you edit a note, AutoDater adds or updates its `Updated` date.
+
+- Preserves existing `Created` values
+- Processes Markdown notes only
+- Stores dates inside the note, so they travel with the file when frontmatter is preserved
+- Waits six seconds after editing before updating frontmatter
+- Works without templates or configuration
+
+## Install
+
+1. Open **Settings → Community Plugins**.
+2. Click **Browse** and search for **AutoDater**.
+3. Install and enable it.
 
 ## Settings
 
-AutoDater works without configuration using `Created`, `Updated`, and `YYYY-MM-DD` date values. You can optionally customize the property names and choose date-only, local date-time, or ISO 8601 date-time formats.
+AutoDater uses `Created`, `Updated`, and `YYYY-MM-DD` by default. You can customize the property names and choose date-only, local date-time, or ISO 8601 date-time formats.
 
-Changing a property name affects future writes only. AutoDater does not rename or migrate existing frontmatter fields automatically.
+Changing a property name affects future writes only. Existing frontmatter properties are not renamed automatically.
 
-## Installation ⚙️
+## Important behavior
 
-**From Obsidian (recommended):**
+- Existing notes are not backfilled when you enable AutoDater.
+- Editing an existing note adds or updates `Updated`, but does not add a missing `Created` value.
+- `Created` records the date AutoDater first sees a new note without an existing `Created` property.
 
-1.  Open **Settings → Community Plugins** and turn off **Restricted mode** if needed.
-2.  Click **Browse**, search for **AutoDater**, and install it.
-3.  Enable the plugin under **Community Plugins**.
+## Development
 
-**Manual installation (for testing):**
+```bash
+npm install
+npm run build
+```
 
-1.  Download the `main.js`, `styles.css` (if any), and `manifest.json` files from the latest release.
-2.  Navigate to your Obsidian vault's configuration folder: `<YourVault>/.obsidian/plugins/`.
-3.  Create a new folder named `autodater` (this should match the `id` in your `manifest.json`).
-4.  Place the downloaded files into this new folder.
-5.  Go to Obsidian settings > Community Plugins.
-6.  Refresh the list and enable "AutoDater".
-
-## Local Development 🛠️
-
-If you want to build the plugin yourself or contribute:
-
-1.  Clone this repository.
-2.  Install dependencies: `npm install`.
-3.  Build the plugin:
-    *   `npm run dev`: Starts a watch mode that rebuilds the plugin on changes.
-    *   `npm run build`: Creates a production build in the root directory.
-
-## Changelog 📜
-
-**Version 1.1.0**
-
-* **Robust File Handling:** Implemented debouncing (2s) and loop protection to ensure safe and efficient file updates.
-* **Tooling Upgrade:** Migrated to ESLint Flat Config, upgraded TypeScript to 6.0, and updated dependencies to the latest versions.
-* **Type Safety:** Improved internal type definitions for safer frontmatter manipulation.
-
-**Version 1.0.0 (Initial Release)**
-
-* Plugin Created!
-* Adds `Created` and `Updated` fields (YYYY-MM-DD) to new notes.
-* Updates/adds `Updated` field on note modification.
-* Uses `obsidian` package's `processFrontMatter` for safe YAML handling.
+See [GitHub Releases](https://github.com/cheuyin/autodater/releases) for version history.
