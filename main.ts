@@ -51,6 +51,7 @@ export default class AutoDater extends Plugin {
 		eventType: "created" | "updated",
 	): Promise<void> {
 		if (!(file instanceof TFile)) return;
+		if (file.extension !== "md") return;
 
 		const property =
 			eventType === "created"

@@ -25,6 +25,12 @@ This plugin solves that by embedding `Created` and `Updated` timestamps directly
 * **Safe Updates:** The plugin uses Obsidian's `processFrontMatter` API to carefully add or update fields without overwriting other existing YAML data. It also includes built-in protection to prevent infinite update loops.
 * **Lightweight & Robust:** Designed to update efficiently. It uses a debounced update mechanism (6-second delay) to ensure it only writes to your file once you've finished typing, preventing unnecessary disk I/O and performance lag.
 
+## Settings
+
+AutoDater works without configuration using `Created`, `Updated`, and `YYYY-MM-DD` date values. You can optionally customize the property names and choose date-only, local date-time, or ISO 8601 date-time formats.
+
+Changing a property name affects future writes only. AutoDater does not rename or migrate existing frontmatter fields automatically.
+
 ## Installation ⚙️
 
 **From Obsidian (recommended):**
