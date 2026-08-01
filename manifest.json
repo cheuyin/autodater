@@ -3,7 +3,7 @@
 	"name": "AutoDater",
 	"version": "1.1.1",
 	"minAppVersion": "1.12.3",
-	"description": "Automatically adds Created/Updated dates to YAML frontmatter.",
+	"description": "Automatically add Created and Updated dates to the top of new and edited notes. Zero setup, no manual date tracking.",
 	"author": "Stanley Cheung",
 	"authorUrl": "https://github.com/cheuyin/",
 	"fundingUrl": "https://github.com/cheuyin/",
