@@ -1,5 +1,5 @@
 import { PluginSettingTab, Setting } from "obsidian";
-import type { App, Plugin } from "obsidian";
+import type { App, Plugin, SettingDefinitionItem } from "obsidian";
 
 export type DateFormat = "date" | "datetime" | "iso";
 
@@ -20,12 +20,68 @@ interface AutoDaterSettingsOwner extends Plugin {
 	saveSettings(): Promise<void>;
 }
 
+type AutoDaterSettingsKey = keyof AutoDaterSettings;
+
 export class AutoDaterSettingTab extends PluginSettingTab {
 	plugin: AutoDaterSettingsOwner;
 
 	constructor(app: App, plugin: AutoDaterSettingsOwner) {
 		super(app, plugin);
 		this.plugin = plugin;
+	}
+
+	getSettingDefinitions(): SettingDefinitionItem<AutoDaterSettingsKey>[] {
+		return [
+			{
+				name: "Created property",
+				desc: "Property written when a note is created.",
+				control: {
+					type: "text",
+					key: "createdProperty",
+					validate: validatePropertyName,
+				},
+			},
+			{
+				name: "Updated property",
+				desc: "Property updated when a note is modified.",
+				control: {
+					type: "text",
+					key: "updatedProperty",
+					validate: validatePropertyName,
+				},
+			},
+			{
+				name: "Date format",
+				desc: "Format used for Created and Updated values.",
+				control: {
+					type: "dropdown",
+					key: "dateFormat",
+					defaultValue: DEFAULT_SETTINGS.dateFormat,
+					options: {
+						date: "Date only (YYYY-MM-DD)",
+						datetime: "Local date and time",
+						iso: "ISO 8601 date and time",
+					},
+				},
+			},
+		];
+	}
+
+	async setControlValue(key: string, value: unknown): Promise<void> {
+		if (key === "createdProperty" || key === "updatedProperty") {
+			if (typeof value !== "string") return;
+
+			this.plugin.settings[key] = value.trim();
+		} else if (key === "dateFormat") {
+			const format = String(value);
+			if (!isDateFormat(format)) return;
+
+			this.plugin.settings.dateFormat = format;
+		} else {
+			return;
+		}
+
+		await this.plugin.saveSettings();
 	}
 
 	display(): void {
@@ -97,4 +153,8 @@ export class AutoDaterSettingTab extends PluginSettingTab {
 
 function isDateFormat(value: string): value is DateFormat {
 	return value === "date" || value === "datetime" || value === "iso";
+}
+
+function validatePropertyName(value: string): string | undefined {
+	return value.trim() ? undefined : "Property name cannot be empty.";
 }
