@@ -6,6 +6,10 @@ export function formatDate(currentDate: Date, dateFormat: DateFormat): string {
 			return formatLocalDateTime(currentDate);
 		case "iso":
 			return formatIsoDate(currentDate);
+		case "date-dmy":
+			return formatDmyDate(currentDate);
+		case "date-mdy":
+			return formatMdyDate(currentDate);
 		case "date":
 		default:
 			return formatLocalDate(currentDate);
@@ -17,6 +21,22 @@ function formatLocalDate(currentDate: Date): string {
 		currentDate.getFullYear(),
 		pad(currentDate.getMonth() + 1),
 		pad(currentDate.getDate()),
+	].join("-");
+}
+
+function formatDmyDate(currentDate: Date): string {
+	return [
+		pad(currentDate.getDate()),
+		pad(currentDate.getMonth() + 1),
+		currentDate.getFullYear(),
+	].join("-");
+}
+
+function formatMdyDate(currentDate: Date): string {
+	return [
+		pad(currentDate.getMonth() + 1),
+		pad(currentDate.getDate()),
+		currentDate.getFullYear(),
 	].join("-");
 }
 

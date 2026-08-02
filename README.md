@@ -33,7 +33,7 @@ When you edit a note, AutoDater adds or updates its `Updated` date.
 
 ## Settings
 
-AutoDater uses `Created`, `Updated`, and `YYYY-MM-DD` by default. You can customize the property names and choose date-only, local date-time, or ISO 8601 date-time formats. On Obsidian 1.13.0 and later, these settings also appear in the global settings search.
+AutoDater uses `Created`, `Updated`, and `YYYY-MM-DD` by default. You can customize the property names and choose date-only (`YYYY-MM-DD`, `DD-MM-YYYY`, or `MM-DD-YYYY`), local date-time, or ISO 8601 date-time formats. On Obsidian 1.13.0 and later, these settings also appear in the global settings search.
 
 Changing a property name affects future writes only. Existing frontmatter properties are not renamed automatically.
 
