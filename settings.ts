@@ -15,6 +15,47 @@ export const DEFAULT_SETTINGS: AutoDaterSettings = {
 	dateFormat: "date",
 };
 
+const DATE_FORMATS: readonly DateFormat[] = [
+	"date",
+	"datetime",
+	"iso",
+	"date-dmy",
+	"date-mdy",
+];
+
+export function parseStoredSettings(data: unknown): Partial<AutoDaterSettings> {
+	if (typeof data !== "object" || data === null) {
+		return {};
+	}
+
+	const record = data as Record<string, unknown>;
+	const settings: Partial<AutoDaterSettings> = {};
+
+	const createdProperty = record.createdProperty;
+	if (typeof createdProperty === "string") {
+		settings.createdProperty = createdProperty;
+	}
+
+	const updatedProperty = record.updatedProperty;
+	if (typeof updatedProperty === "string") {
+		settings.updatedProperty = updatedProperty;
+	}
+
+	const dateFormat = record.dateFormat;
+	if (isDateFormat(dateFormat)) {
+		settings.dateFormat = dateFormat;
+	}
+
+	return settings;
+}
+
+function isDateFormat(value: unknown): value is DateFormat {
+	return (
+		typeof value === "string" &&
+		(DATE_FORMATS as readonly string[]).includes(value)
+	);
+}
+
 interface AutoDaterSettingsOwner extends Plugin {
 	settings: AutoDaterSettings;
 	saveSettings(): Promise<void>;

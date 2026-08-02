@@ -1,6 +1,6 @@
 import { Plugin, TFile, debounce } from "obsidian";
 import { formatDate } from "./date-utils";
-import { AutoDaterSettingTab, DEFAULT_SETTINGS } from "./settings";
+import { AutoDaterSettingTab, DEFAULT_SETTINGS, parseStoredSettings } from "./settings";
 import type { AutoDaterSettings } from "./settings";
 
 export default class AutoDater extends Plugin {
@@ -35,11 +35,11 @@ export default class AutoDater extends Plugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData(),
-		);
+		const loadedData: unknown = await this.loadData();
+		this.settings = {
+			...DEFAULT_SETTINGS,
+			...parseStoredSettings(loadedData),
+		};
 		this.settings.createdProperty = this.settings.createdProperty.trim();
 		this.settings.updatedProperty = this.settings.updatedProperty.trim();
 	}
