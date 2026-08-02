@@ -1,7 +1,7 @@
 import { PluginSettingTab } from "obsidian";
 import type { App, Plugin, SettingDefinitionItem } from "obsidian";
 
-export type DateFormat = "date" | "datetime" | "iso";
+export type DateFormat = "date" | "datetime" | "iso" | "date-dmy" | "date-mdy";
 
 export interface AutoDaterSettings {
 	createdProperty: string;
@@ -59,6 +59,8 @@ export class AutoDaterSettingTab extends PluginSettingTab {
 					defaultValue: DEFAULT_SETTINGS.dateFormat,
 					options: {
 						date: "Date only (YYYY-MM-DD)",
+						"date-dmy": "Date only (DD-MM-YYYY)",
+						"date-mdy": "Date only (MM-DD-YYYY)",
 						datetime: "Local date and time",
 						iso: "ISO 8601 date and time",
 					},
