@@ -8,7 +8,7 @@ Requires Obsidian 1.13.0 or later.
 
 ## What it does
 
-After you create and edit a note, its YAML frontmatter looks like this:
+AutoDater writes dates into YAML frontmatter when you create or edit a note:
 
 ```yaml
 ---
@@ -17,8 +17,8 @@ Updated: 2026-08-01
 ---
 ```
 
-When you edit a note, AutoDater adds or updates its `Updated` date.
-
+- Adds `Created` when a new note has no existing value for that property
+- Updates `Updated` when you edit a note
 - Preserves existing `Created` values
 - Processes Markdown notes only
 - Stores dates inside the note, so they travel with the file when frontmatter is preserved
@@ -33,11 +33,30 @@ When you edit a note, AutoDater adds or updates its `Updated` date.
 
 ## Settings
 
-AutoDater uses `Created`, `Updated`, and `YYYY-MM-DD` by default. You can customize the property names and choose date-only (`YYYY-MM-DD`, `DD-MM-YYYY`, or `MM-DD-YYYY`), local date-time, or ISO 8601 date-time formats. On Obsidian 1.13.0 and later, these settings also appear in the global settings search.
+Defaults:
 
-Changing a property name affects future writes only. Existing frontmatter properties are not renamed automatically.
+- **Created property:** `Created`
+- **Updated property:** `Updated`
+- **Date format:** `YYYY-MM-DD`
 
-Property names are matched case-insensitively when updating existing fields. For example, `Updated` and `updated` are treated as the same property, while a different name such as `modified` creates a separate property.
+You can customize property names and date format in **Settings → AutoDater**. On Obsidian 1.13.0 and later, these settings also appear in the global settings search.
+
+**Date formats:**
+
+- `YYYY-MM-DD` — date only (default)
+- `DD-MM-YYYY` — date only
+- `MM-DD-YYYY` — date only
+- Local date and time — `YYYY-MM-DD HH:MM`
+- ISO 8601 — full ISO date-time string
+
+**Property names:**
+
+- Changing a property name affects future writes only. Existing frontmatter properties are not renamed automatically.
+- Names are matched case-insensitively when updating existing fields. For example, `Updated` and `updated` are treated as the same property; `modified` is a separate property.
+
+**Obsidian property types:**
+
+- If you use `DD-MM-YYYY` or `MM-DD-YYYY`, set the property type to **Text** in Obsidian. The **Date** property type expects `YYYY-MM-DD` and may misread other formats (for example, `02-08-2026` as `2002-08-20`).
 
 ## Important behavior
 
