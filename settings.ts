@@ -66,28 +66,6 @@ export class AutoDaterSettingTab extends PluginSettingTab {
 			},
 		];
 	}
-
-	async setControlValue(key: string, value: unknown): Promise<void> {
-		if (key === "createdProperty" || key === "updatedProperty") {
-			if (typeof value !== "string") return;
-
-			this.plugin.settings[key] = value.trim();
-		} else if (key === "dateFormat") {
-			const format = String(value);
-			if (!isDateFormat(format)) return;
-
-			this.plugin.settings.dateFormat = format;
-		} else {
-			return;
-		}
-
-		await this.plugin.saveSettings();
-	}
-
-}
-
-function isDateFormat(value: string): value is DateFormat {
-	return value === "date" || value === "datetime" || value === "iso";
 }
 
 function validatePropertyName(value: string): string | undefined {

@@ -35,11 +35,13 @@ export default class AutoDater extends Plugin {
 	}
 
 	async loadSettings(): Promise<void> {
-		const savedData = (await this.loadData()) as
-			| Partial<AutoDaterSettings>
-			| null;
-
-		this.settings = { ...DEFAULT_SETTINGS, ...(savedData ?? {}) };
+		this.settings = Object.assign(
+			{},
+			DEFAULT_SETTINGS,
+			await this.loadData(),
+		);
+		this.settings.createdProperty = this.settings.createdProperty.trim();
+		this.settings.updatedProperty = this.settings.updatedProperty.trim();
 	}
 
 	async saveSettings(): Promise<void> {
@@ -53,10 +55,12 @@ export default class AutoDater extends Plugin {
 		if (!(file instanceof TFile)) return;
 		if (file.extension !== "md") return;
 
-		const configuredProperty =
+		const configuredProperty = (
 			eventType === "created"
 				? this.settings.createdProperty
-				: this.settings.updatedProperty;
+				: this.settings.updatedProperty
+		).trim();
+		if (!configuredProperty) return;
 		const dateValue = formatDate(new Date(), this.settings.dateFormat);
 
 		try {
