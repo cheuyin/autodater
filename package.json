@@ -1,6 +1,6 @@
 {
 	"name": "autodater",
-	"version": "2.1.1",
+	"version": "2.2.0",
 	"description": "Automatically adds Created/Updated dates to YAML frontmatter.",
 	"main": "main.js",
 	"scripts": {
