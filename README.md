@@ -24,6 +24,7 @@ Updated: 2026-08-01
 - Stores dates inside the note, so they travel with the file when frontmatter is preserved
 - Waits six seconds after editing before updating frontmatter
 - Works without templates or configuration
+- Can exclude folders (for example, a Templates folder) so AutoDater leaves them untouched
 
 ## Install
 
@@ -38,8 +39,15 @@ Defaults:
 - **Created property:** `Created`
 - **Updated property:** `Updated`
 - **Date format:** `YYYY-MM-DD`
+- **Excluded folders:** none
 
 You can customize property names and date format in **Settings → AutoDater**. On Obsidian 1.13.0 and later, these settings also appear in the global settings search.
+
+**Excluded folders:**
+
+- Add folders you want AutoDater to skip, such as a `Templates` folder.
+- AutoDater will not add or update dates in any note inside an excluded folder, including its subfolders.
+- Use **Add folder** to enter a folder path, then remove entries with the delete button.
 
 **Date formats:**
 
