@@ -54,6 +54,7 @@ export default class AutoDater extends Plugin {
 	): Promise<void> {
 		if (!(file instanceof TFile)) return;
 		if (file.extension !== "md") return;
+		if (isPathExcluded(file.path, this.settings.excludedFolders)) return;
 
 		const configuredProperty = (
 			eventType === "created"
@@ -113,4 +114,27 @@ function findExistingPropertyName(
 				frontmatterProperty.toLowerCase() === normalizedProperty,
 		) ?? configuredProperty
 	);
+}
+
+/**
+ * Returns true when the given file path is inside any of the excluded
+ * folders. Matching is done against the ancestor chain (not just the
+ * immediate parent), so a file in a subfolder of an excluded folder is
+ * also excluded. Stored folder paths are normalized by trimming and
+ * stripping a trailing slash before comparison.
+ */
+function isPathExcluded(
+	filePath: string,
+	excludedFolders: readonly string[],
+): boolean {
+	for (const folder of excludedFolders) {
+		const normalized = folder.trim().replace(/\/+$/, "");
+		if (!normalized) continue;
+		if (
+			filePath === normalized ||
+			filePath.startsWith(normalized + "/")
+		)
+			return true;
+	}
+	return false;
 }
