@@ -7,12 +7,14 @@ export interface AutoDaterSettings {
 	createdProperty: string;
 	updatedProperty: string;
 	dateFormat: DateFormat;
+	excludedFolders: string[];
 }
 
 export const DEFAULT_SETTINGS: AutoDaterSettings = {
 	createdProperty: "Created",
 	updatedProperty: "Updated",
 	dateFormat: "date",
+	excludedFolders: [],
 };
 
 const DATE_FORMATS: readonly DateFormat[] = [
@@ -44,6 +46,15 @@ export function parseStoredSettings(data: unknown): Partial<AutoDaterSettings> {
 	const dateFormat = record.dateFormat;
 	if (isDateFormat(dateFormat)) {
 		settings.dateFormat = dateFormat;
+	}
+
+	const excludedFolders = record.excludedFolders;
+	if (Array.isArray(excludedFolders)) {
+		const folders = excludedFolders
+			.filter((value): value is string => typeof value === "string")
+			.map((value) => value.trim())
+			.filter((value) => value.length > 0);
+		settings.excludedFolders = folders;
 	}
 
 	return settings;
