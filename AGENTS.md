@@ -54,6 +54,32 @@ When behavior changes, update or add focused tests if a test setup is introduced
 
 The version in `package.json` must stay consistent with `manifest.json` and `versions.json`. Use the existing `npm version` lifecycle and `version-bump.mjs` rather than editing release metadata inconsistently. Confirm the resulting metadata and run `npm run build` before a release.
 
+## Release workflow
+
+Publishing a release is a fixed sequence. Do these in order on `main`:
+
+1. **Merge feature work into `main` first.** Fast-forward the feature branch
+   (`git checkout main && git merge --ff-only <branch>`). The release commit and
+   tag must land on `main`, not a feature branch.
+2. **Ensure a clean working tree.** The `npm version` lifecycle runs
+   `git add manifest.json versions.json`; it fails (exit 128) if the tree is
+   dirty. Commit or stash everything first.
+3. **Bump the version.** Run `npm version minor --tag-version-prefix=""`.
+   - `--tag-version-prefix=""` produces a plain tag (`2.2.0`), not `v2.2.0`.
+   - This updates `package.json`, `manifest.json`, and `versions.json` together
+     via `version-bump.mjs`, and creates the release commit + tag.
+   - `npm version` reads `~/.gitconfig` to create the commit/tag, so it must run
+     outside the terminal sandbox.
+4. **Rebuild the bundle.** Run `npm run build` so `main.js` matches the released
+   source. `main.js` is gitignored and is attached to the release, never committed.
+5. **Push branch and tag.** `git push origin main --tags`.
+6. **Create the release.** Attach the three assets to the tag:
+   `gh release create <version> main.js manifest.json styles.css --title "<version>" --notes "<summary>"`
+   (for example, `gh release create 2.2.0 main.js manifest.json styles.css`).
+
+`main.js` is intentionally not in the repo (see `.gitignore`); it is uploaded to
+the GitHub release instead.
+
 ## Git and planning rules
 
 - Use Conventional Commits: `type(scope): description` (for example, `feat(date): add timezone-aware formatting`).
