@@ -1,4 +1,11 @@
-import { PluginSettingTab } from "obsidian";
+import {
+	Modal,
+	Notice,
+	PluginSettingTab,
+	Setting,
+	TextComponent,
+	TFolder,
+} from "obsidian";
 import type { App, Plugin, SettingDefinitionItem } from "obsidian";
 
 export type DateFormat = "date" | "datetime" | "iso" | "date-dmy" | "date-mdy";
@@ -118,7 +125,86 @@ export class AutoDaterSettingTab extends PluginSettingTab {
 					},
 				},
 			},
+			{
+				type: "list",
+				heading: "Excluded folders",
+				desc: "Folders AutoDater will not add or update dates in. Subfolders are included.",
+				emptyState: "No excluded folders.",
+				addItem: {
+					name: "Add folder",
+					action: () => this.openAddFolderModal(),
+				},
+				onDelete: (index) => {
+					this.plugin.settings.excludedFolders.splice(index, 1);
+					void this.plugin.saveSettings();
+					this.update();
+				},
+				items: this.plugin.settings.excludedFolders.map((folder) => ({
+					name: folder,
+					searchable: false,
+				})),
+			},
 		];
+	}
+
+	private openAddFolderModal(): void {
+		new AddFolderModal(this.app, (folder) => {
+			const normalized = folder.trim().replace(/\/+$/, "");
+			if (!normalized) return;
+			if (this.plugin.settings.excludedFolders.includes(normalized))
+				return;
+			this.plugin.settings.excludedFolders.push(normalized);
+			void this.plugin.saveSettings();
+			this.update();
+		}).open();
+	}
+}
+
+class AddFolderModal extends Modal {
+	private result: (folder: string) => void;
+
+	constructor(app: App, result: (folder: string) => void) {
+		super(app);
+		this.result = result;
+	}
+
+	onOpen(): void {
+		this.setTitle("Add excluded folder");
+
+		let input: TextComponent;
+		new Setting(this.contentEl)
+			.setName("Folder path")
+			.setDesc("Path to a folder in this vault, for example Templates.")
+			.addText((text) => {
+				input = text;
+				text.setPlaceholder("Templates");
+			});
+
+		new Setting(this.contentEl).addButton((button) =>
+			button
+				.setButtonText("Add")
+				.setCta()
+				.onClick(() => {
+					const folder = this.resolveFolder(input.getValue());
+					if (!folder) {
+						new Notice("Enter a valid folder path.");
+						return;
+					}
+					this.result(folder.path);
+					this.close();
+				}),
+		);
+	}
+
+	private resolveFolder(value: string): TFolder | null {
+		const path = value.trim().replace(/\/+$/, "");
+		if (!path) return null;
+		const file = this.app.vault.getAbstractFileByPath(path);
+		return file instanceof TFolder ? file : null;
+	}
+
+	onClose(): void {
+		this.contentEl.empty();
 	}
 }
 
