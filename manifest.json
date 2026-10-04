@@ -6,6 +6,5 @@
 	"description": "Automatically add Created and Updated dates to the top of new and edited notes. Zero setup, no more manual date tracking.",
 	"author": "Stanley Cheung",
 	"authorUrl": "https://github.com/cheuyin/",
-	"fundingUrl": "https://github.com/cheuyin/",
 	"isDesktopOnly": false
 }
