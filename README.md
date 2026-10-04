@@ -56,6 +56,15 @@ You can customize property names and date format in **Settings → AutoDater**. 
 - `MM-DD-YYYY` — date only
 - Local date and time — `YYYY-MM-DD HH:MM`
 - ISO 8601 — full ISO date-time string
+- Custom format — your own token-based pattern, for example `DD/MM/YYYY HH:mm:ss`
+
+**Custom format tokens:**
+
+- `YYYY` year, `YY` two-digit year, `MM` month, `M` month, `DD` day, `D` day
+- `HH` 24-hour, `H` 24-hour, `hh` 12-hour, `h` 12-hour, `mm` minutes, `m` minutes, `ss` seconds, `s` seconds
+- `A` AM/PM, `a` am/pm
+- Wrap text in `[brackets]` to keep it literal (for example `[Year]: YYYY`), since token letters inside plain words are still interpreted.
+- The settings screen shows a live preview of the current pattern.
 
 **Property names:**
 
@@ -65,6 +74,7 @@ You can customize property names and date format in **Settings → AutoDater**. 
 **Obsidian property types:**
 
 - If you use `DD-MM-YYYY` or `MM-DD-YYYY`, set the property type to **Text** in Obsidian. The **Date** property type expects `YYYY-MM-DD` and may misread other formats (for example, `02-08-2026` as `2002-08-20`).
+- The same applies to most custom formats: anything that is not `YYYY-MM-DD` (or a superset starting with it, such as `YYYY-MM-DD HH:mm`) should use the **Text** property type. Non-ISO formats also sort alphabetically rather than chronologically, which affects Dataview queries.
 
 ## Important behavior
 

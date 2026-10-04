@@ -7,72 +7,16 @@ import {
 	TFolder,
 } from "obsidian";
 import type { App, Plugin, SettingDefinitionItem } from "obsidian";
+import { formatDate } from "./date-utils";
+import {
+	DEFAULT_SETTINGS,
+	validateCustomFormat,
+	validatePropertyName,
+} from "./settings-core";
+import type { AutoDaterSettings } from "./settings-core";
 
-export type DateFormat = "date" | "datetime" | "iso" | "date-dmy" | "date-mdy";
-
-export interface AutoDaterSettings {
-	createdProperty: string;
-	updatedProperty: string;
-	dateFormat: DateFormat;
-	excludedFolders: string[];
-}
-
-export const DEFAULT_SETTINGS: AutoDaterSettings = {
-	createdProperty: "Created",
-	updatedProperty: "Updated",
-	dateFormat: "date",
-	excludedFolders: [],
-};
-
-const DATE_FORMATS: readonly DateFormat[] = [
-	"date",
-	"datetime",
-	"iso",
-	"date-dmy",
-	"date-mdy",
-];
-
-export function parseStoredSettings(data: unknown): Partial<AutoDaterSettings> {
-	if (typeof data !== "object" || data === null) {
-		return {};
-	}
-
-	const record = data as Record<string, unknown>;
-	const settings: Partial<AutoDaterSettings> = {};
-
-	const createdProperty = record.createdProperty;
-	if (typeof createdProperty === "string") {
-		settings.createdProperty = createdProperty;
-	}
-
-	const updatedProperty = record.updatedProperty;
-	if (typeof updatedProperty === "string") {
-		settings.updatedProperty = updatedProperty;
-	}
-
-	const dateFormat = record.dateFormat;
-	if (isDateFormat(dateFormat)) {
-		settings.dateFormat = dateFormat;
-	}
-
-	const excludedFolders = record.excludedFolders;
-	if (Array.isArray(excludedFolders)) {
-		const folders = excludedFolders
-			.filter((value): value is string => typeof value === "string")
-			.map((value) => value.trim())
-			.filter((value) => value.length > 0);
-		settings.excludedFolders = folders;
-	}
-
-	return settings;
-}
-
-function isDateFormat(value: unknown): value is DateFormat {
-	return (
-		typeof value === "string" &&
-		(DATE_FORMATS as readonly string[]).includes(value)
-	);
-}
+export type { AutoDaterSettings, DateFormat } from "./settings-core";
+export { DEFAULT_SETTINGS, parseStoredSettings } from "./settings-core";
 
 interface AutoDaterSettingsOwner extends Plugin {
 	settings: AutoDaterSettings;
@@ -80,6 +24,8 @@ interface AutoDaterSettingsOwner extends Plugin {
 }
 
 type AutoDaterSettingsKey = keyof AutoDaterSettings;
+
+const customFormatPlaceholder = "DD/MM/YYYY HH:mm:ss";
 
 export class AutoDaterSettingTab extends PluginSettingTab {
 	plugin: AutoDaterSettingsOwner;
@@ -122,8 +68,40 @@ export class AutoDaterSettingTab extends PluginSettingTab {
 						"date-mdy": "Date only (MM-DD-YYYY)",
 						datetime: "Local date and time",
 						iso: "ISO 8601 date and time",
+						custom: "Custom format",
 					},
 				},
+			},
+			{
+				name: "Custom format",
+				desc: "Used when Date format is Custom. Tokens: YYYY YY MM M DD D HH H hh h mm m ss s A a. Wrap text in [brackets] to keep it literal.",
+				render: (setting) => {
+					const previewEl = setting.descEl.createDiv({
+						cls: "autodater-format-preview",
+					});
+					const refreshPreview = (value: string): void => {
+						const error = validateCustomFormat(value);
+						previewEl.toggleClass("is-invalid", error !== undefined);
+						previewEl.setText(
+							error ??
+								`Preview: ${formatDate(new Date(), "custom", value)}`,
+						);
+					};
+					setting.addText((text) => {
+						text
+							.setPlaceholder(customFormatPlaceholder)
+							.setValue(this.plugin.settings.customDateFormat)
+							.onChange((value) => {
+								refreshPreview(value);
+								if (validateCustomFormat(value) !== undefined)
+									return;
+								this.plugin.settings.customDateFormat = value;
+								void this.plugin.saveSettings();
+							});
+					});
+					refreshPreview(this.plugin.settings.customDateFormat);
+				},
+				visible: () => this.plugin.settings.dateFormat === "custom",
 			},
 			{
 				type: "list",
@@ -174,7 +152,7 @@ class AddFolderModal extends Modal {
 		let input: TextComponent;
 		new Setting(this.contentEl)
 			.setName("Folder path")
-			.setDesc("Path to a folder in this vault, for example Templates.")
+			.setDesc("Path to a folder in this vault, for example templates.")
 			.addText((text) => {
 				input = text;
 				text.setPlaceholder("Templates");
@@ -206,8 +184,4 @@ class AddFolderModal extends Modal {
 	onClose(): void {
 		this.contentEl.empty();
 	}
-}
-
-function validatePropertyName(value: string): string | undefined {
-	return value.trim() ? undefined : "Property name cannot be empty.";
 }

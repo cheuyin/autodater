@@ -42,6 +42,7 @@ export default class AutoDater extends Plugin {
 		};
 		this.settings.createdProperty = this.settings.createdProperty.trim();
 		this.settings.updatedProperty = this.settings.updatedProperty.trim();
+		this.settings.customDateFormat = this.settings.customDateFormat.trim();
 	}
 
 	async saveSettings(): Promise<void> {
@@ -62,7 +63,11 @@ export default class AutoDater extends Plugin {
 				: this.settings.updatedProperty
 		).trim();
 		if (!configuredProperty) return;
-		const dateValue = formatDate(new Date(), this.settings.dateFormat);
+		const dateValue = formatDate(
+			new Date(),
+			this.settings.dateFormat,
+			this.settings.customDateFormat,
+		);
 
 		try {
 			await this.app.fileManager.processFrontMatter(
