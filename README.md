@@ -1,14 +1,21 @@
-# AutoDater for Obsidian
+# AutoDater
 
-Automatically add `Created` and `Updated` dates to new and edited Markdown notes. Zero setup, no manual date tracking.
+**Never manually date a note again.** AutoDater adds `Created` and `Updated` dates to your notes automatically, so your journal, daily notes, and vault stay in sync with zero effort.
 
-Requires Obsidian 1.13.0 or later.
+Requires Obsidian 1.13.0 or later. No setup needed. Works on desktop and mobile.
 
 ![Obsidian Properties showing automatic Created and Updated dates](./assets/properties-preview.png)
 
+## Why you'll like it
+
+- **Zero setup.** It works as soon as you enable it. No templates, no configuration.
+- **Accurate, permanent history.** `Created` is set once and never overwritten, while `Updated` refreshes as you edit.
+- **Travels with your notes.** Dates live in frontmatter, so they sync and work with Dataview and Bases.
+- **Stays out of your way.** Skips non-Markdown files and any folders you exclude (for example, a Templates folder).
+
 ## What it does
 
-AutoDater writes dates into YAML frontmatter when you create or edit a note:
+When you create a note, AutoDater adds `Created`. When you edit a note, it updates `Updated`:
 
 ```yaml
 ---
@@ -22,19 +29,19 @@ Updated: 2026-08-01
 - Preserves existing `Created` values
 - Processes Markdown notes only
 - Stores dates inside the note, so they travel with the file when frontmatter is preserved
-- Waits six seconds after editing before updating frontmatter
+- Waits six seconds after editing before updating frontmatter, so rapid edits do not cause constant writes
 - Works without templates or configuration
 - Can exclude folders (for example, a Templates folder) so AutoDater leaves them untouched
 
 ## Install
 
-1. Open **Settings → Community Plugins**.
+1. Open **Settings → Community plugins**.
 2. Click **Browse** and search for **AutoDater**.
-3. Install and enable it.
+3. Click **Install**, then **Enable**.
 
 ## Settings
 
-Defaults:
+Defaults work out of the box:
 
 - **Created property:** `Created`
 - **Updated property:** `Updated`
@@ -49,34 +56,37 @@ You can customize property names and date format in **Settings → AutoDater**. 
 - AutoDater will not add or update dates in any note inside an excluded folder, including its subfolders.
 - Use **Add folder** to enter a folder path, then remove entries with the delete button.
 
-**Date formats:**
+### Property names
 
-- `YYYY-MM-DD` — date only (default)
-- `DD-MM-YYYY` — date only
-- `MM-DD-YYYY` — date only
-- Local date and time — `YYYY-MM-DD HH:MM`
-- ISO 8601 — full ISO date-time string
-- Custom format — your own token-based pattern, for example `DD/MM/YYYY HH:mm:ss`
+- Changing a property name affects future writes only. Existing frontmatter properties are not renamed automatically.
+- Names are matched case-insensitively when updating existing fields. For example, `Updated` and `updated` are treated as the same property, while `modified` is separate.
 
-**Custom format tokens:**
+### Date formats
+
+- `YYYY-MM-DD`: date only (default)
+- `DD-MM-YYYY`: date only
+- `MM-DD-YYYY`: date only
+- Local date and time: `YYYY-MM-DD HH:MM`
+- ISO 8601: full ISO date-time string
+- Custom format: your own token-based pattern, for example `DD/MM/YYYY HH:mm:ss`
+
+<details>
+<summary>Custom format tokens</summary>
 
 - `YYYY` year, `YY` two-digit year, `MM` month, `M` month, `DD` day, `D` day
 - `HH` 24-hour, `H` 24-hour, `hh` 12-hour, `h` 12-hour, `mm` minutes, `m` minutes, `ss` seconds, `s` seconds
 - `A` AM/PM, `a` am/pm
-- Wrap text in `[brackets]` to keep it literal (for example `[Year]: YYYY`), since token letters inside plain words are still interpreted.
+- Wrap text in `[brackets]` to keep it literal (for example, `[Year]: YYYY`), since token letters inside plain words are still interpreted.
 - The settings screen shows a live preview of the current pattern.
 
-**Property names:**
+</details>
 
-- Changing a property name affects future writes only. Existing frontmatter properties are not renamed automatically.
-- Names are matched case-insensitively when updating existing fields. For example, `Updated` and `updated` are treated as the same property; `modified` is a separate property.
-
-**Obsidian property types:**
+### Obsidian property types
 
 - If you use `DD-MM-YYYY` or `MM-DD-YYYY`, set the property type to **Text** in Obsidian. The **Date** property type expects `YYYY-MM-DD` and may misread other formats (for example, `02-08-2026` as `2002-08-20`).
 - The same applies to most custom formats: anything that is not `YYYY-MM-DD` (or a superset starting with it, such as `YYYY-MM-DD HH:mm`) should use the **Text** property type. Non-ISO formats also sort alphabetically rather than chronologically, which affects Dataview queries.
 
-## Important behavior
+## Good to know
 
 - Existing notes are not backfilled when you enable AutoDater.
 - Editing an existing note adds or updates `Updated`, but does not add a missing `Created` value.
