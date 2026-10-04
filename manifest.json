@@ -3,7 +3,7 @@
 	"name": "AutoDater",
 	"version": "2.3.0",
 	"minAppVersion": "1.13.0",
-	"description": "Automatically add Created and Updated dates to the top of new and edited notes. Zero setup, no more manual date tracking.",
+	"description": "Never manually date a note again. AutoDater adds and updates Created and Updated dates in your notes automatically, with zero setup.",
 	"author": "Stanley Cheung",
 	"authorUrl": "https://github.com/cheuyin/",
 	"isDesktopOnly": false
