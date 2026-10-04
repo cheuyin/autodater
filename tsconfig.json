@@ -9,12 +9,16 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "isolatedModules": true,
+    "allowImportingTsExtensions": true,
     "strictNullChecks": true,
     "lib": [
       "DOM",
       "ES5",
       "ES6",
       "ES7"
+    ],
+    "types": [
+      "node"
     ]
   },
   "include": [
