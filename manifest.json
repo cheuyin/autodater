@@ -1,7 +1,7 @@
 {
 	"id": "autodater",
 	"name": "AutoDater",
-	"version": "2.3.0",
+	"version": "2.3.1",
 	"minAppVersion": "1.13.0",
 	"description": "Never manually date a note again. AutoDater adds and updates Created and Updated dates in your notes automatically, with zero setup.",
 	"author": "Stanley Cheung",
